@@ -74,6 +74,12 @@ Get Rows Locator Where Column Is
     ${rows locator}=  Get Rows Locator Where Column Is  ${T}  Office  London
     ${row count}=  Get Element Count  ${rows locator}
     Should Be Equal  ${row count}  ${3}
+    ${result cell 1 1}=  Get Text  ${rows locator}\[1]/td[1]  # Again, hacky check.
+    ${result cell 2 1}=  Get Text  ${rows locator}\[2]/td[1]
+    ${result cell 3 1}=  Get Text  ${rows locator}\[3]/td[1]
+    Should Be Equal  ${result cell 1 1}  Angelica Ramos
+    Should Be Equal  ${result cell 2 1}  Bradley Greer
+    Should Be Equal  ${result cell 3 1}  Bruno Nash
 
 # @TODO:
 #   1. Decide whether to write unit tests for `Prepare Table XPaths` and `Parse XPath`.
