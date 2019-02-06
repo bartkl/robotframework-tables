@@ -5,15 +5,6 @@ Library  SeleniumLibrary
 
 
 
-*** Variables ***
-&{TABLE XPATHS BLUEPRINT}
-...  table=
-...  column name cells=  # Optional.
-...  rows=
-...  cells=
-
-
-
 *** Keywords ***
 Append To String If Not Contained
     [Documentation]  Determines whether `${part}` is contained in `${string}`.
@@ -27,34 +18,6 @@ Append To String If Not Contained
     ...    Return from keyword  ${string}${part}
     ...  ELSE
     ...    Return from keyword  ${string}
-
-Get Column Count
-    [Documentation]  Calculates and returns the amount of columns in the table.
-    [Arguments]
-    ...  ${table xpaths}
-
-    # If `column name cells' is defined.
-    ${count}=  Run Keyword If  'column name cells' in ${table xpaths.keys()}
-    ...    Get Element Count  &{table xpaths}[column name cells]
-
-    Return From Keyword If  ${count} is not None  ${count}
-
-    # Otherwise.
-    ${cells xpath}=  Format String  &{table xpaths}[cells]  row xpath cond=[1]
-    ...                                                     col xpath cond=${EMPTY}
-    ${count}=  Get Element Count  ${cells xpath}
-
-    Return From Keyword  ${count}
-
-Get Row Count
-    [Documentation]  Calculates and returns the amount of rows in the table.
-    [Arguments]
-    ...  ${table xpaths}
-
-    ${rows xpath}=  Format String  &{table xpaths}[rows]  row xpath cond=${EMPTY}
-    ${count}=  Get Element Count  ${rows xpath}
-
-    Return From Keyword  ${count}
 
 Get Cell Value
     [Documentation]  Gets the value from the cell identified by the supplied
@@ -81,27 +44,23 @@ Get Cell Value
 
     Return From Keyword  ${value}
 
-Prepare Table XPaths
-    [Documentation]  @TODO.
+Get Column Count
+    [Documentation]  Calculates and returns the amount of columns in the table.
     [Arguments]
-    ...  ${table}
-    ...  ${rows}
-    ...  ${cells}
-    ...  ${column name cells}=${NONE}
+    ...  ${table xpaths}
 
-    # Append default placeholders for row and column XPath condition
-    # epxressions if none are given. Apply this only for `rows` and `cells`.
-    ${rows}=  Append To String If Not Contained  ${rows}  {row xpath cond}
-    ${cells}=  Append To String If Not Contained  ${cells}  {col xpath cond}
+    # If `column name cells' is defined.
+    ${count}=  Run Keyword If  'column name cells' in ${table xpaths.keys()}
+    ...    Get Element Count  &{table xpaths}[column name cells]
 
-    &{t}=  Create Dictionary
-    ...  table=${table}
-    ...  rows=${table}${rows}
-    ...  cells=${table}${rows}${cells}
-    Run Keyword If  ${column name cells != None}
-    ...  Collections.Set To Dictionary  ${t}  column name cells=${table}${column name cells}
+    Return From Keyword If  ${count} is not None  ${count}
 
-    Return From Keyword  ${t}
+    # Otherwise.
+    ${cells xpath}=  Format String  &{table xpaths}[cells]  row xpath cond=[1]
+    ...                                                     col xpath cond=${EMPTY}
+    ${count}=  Get Element Count  ${cells xpath}
+
+    Return From Keyword  ${count}
 
 Get Column Names
     [Documentation]  Fetches the names of the columsn of the table and returns
@@ -136,4 +95,36 @@ Get Column Number By Name
 
     :FOR  ${i}  ${col name}  IN ENUMERATE  @{col names}
     \  Return from keyword if   '${col name}' == '${name}'  ${i+1}
+
+Get Row Count
+    [Documentation]  Calculates and returns the amount of rows in the table.
+    [Arguments]
+    ...  ${table xpaths}
+
+    ${rows xpath}=  Format String  &{table xpaths}[rows]  row xpath cond=${EMPTY}
+    ${count}=  Get Element Count  ${rows xpath}
+
+    Return From Keyword  ${count}
+
+Prepare Table XPaths
+    [Documentation]  @TODO.
+    [Arguments]
+    ...  ${table}
+    ...  ${rows}
+    ...  ${cells}
+    ...  ${column name cells}=${NONE}
+
+    # Append default placeholders for row and column XPath condition
+    # epxressions if none are given. Apply this only for `rows` and `cells`.
+    ${rows}=  Append To String If Not Contained  ${rows}  {row xpath cond}
+    ${cells}=  Append To String If Not Contained  ${cells}  {col xpath cond}
+
+    &{t}=  Create Dictionary
+    ...  table=${table}
+    ...  rows=${table}${rows}
+    ...  cells=${table}${rows}${cells}
+    Run Keyword If  ${column name cells != None}
+    ...  Collections.Set To Dictionary  ${t}  column name cells=${table}${column name cells}
+
+    Return From Keyword  ${t}
 
