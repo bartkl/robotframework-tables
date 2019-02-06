@@ -23,11 +23,11 @@ Get Cell Locator By Coordinates
     [Tags]  user-keyword
     [Arguments]
     ...  ${table xpaths}
-    ...  ${rownr}
-    ...  ${colnr}
+    ...  ${row nr}
+    ...  ${col nr}
 
-    ${cell xpath}=  Get Cells Locator  &{table xpaths}  row xpath cond=[${rownr}]
-    ...                                                 col xpath cond=[${colnr}]
+    ${cell xpath}=  Get Cells Locator  ${table xpaths}  row condition=[${row nr}]
+    ...                                                 col condition=[${col nr}]
 
     Return From Keyword  ${cell xpath}
 
@@ -48,11 +48,11 @@ Get Cell Value
     [Tags]  user-keyword
     [Arguments]
     ...  ${table xpaths}
-    ...  ${row xpath cond}=${EMPTY}
-    ...  ${col xpath cond}=${EMPTY}
+    ...  ${row condition}=${EMPTY}
+    ...  ${col condition}=${EMPTY}
 
-    ${cell xpath}=  Get Cells Locator  ${table xpaths}  row xpath cond=${row xpath cond}
-    ...                                                 col xpath cond=${col xpath cond}
+    ${cell xpath}=  Get Cells Locator  ${table xpaths}  row condition=${row condition}
+    ...                                                 col condition=${col condition}
     ${value}=  SeleniumLibrary.Get Text  ${cell xpath}
     Return From Keyword  ${value}
 
@@ -60,16 +60,16 @@ Get Cell Value By Coordinates
     [Documentation]  Gets the value of the cell identified by the supplied
     ...  coordinates:
     ...
-    ...  `${rownr}` is the row number, starting from 1.
-    ...  `${colnr}` is the column number, starting from 1.
+    ...  `${row nr}` is the row number, starting from 1.
+    ...  `${col nr}` is the column number, starting from 1.
     ...
     [Tags]  user-keyword
     [Arguments]
     ...  ${table xpaths}
-    ...  ${rownr}
-    ...  ${colnr}
+    ...  ${row nr}
+    ...  ${col nr}
 
-    ${cell xpath}=  Get Cell Locator By Coordinates  ${table xpaths}  ${rownr}  ${colnr}
+    ${cell xpath}=  Get Cell Locator By Coordinates  ${table xpaths}  ${row nr}  ${col nr}
     ${value}=  SeleniumLibrary.Get Text  ${cell xpath}
     Return From Keyword  ${value}
 
@@ -77,11 +77,11 @@ Get Cells Locator
     [Tags]  user-keyword
     [Arguments]
     ...  ${table xpaths}
-    ...  ${row xpath cond}=${EMPTY}
-    ...  ${col xpath cond}=${EMPTY}
+    ...  ${row condition}=${EMPTY}
+    ...  ${col condition}=${EMPTY}
 
-    ${cells xpath}=  Parse XPath  &{table xpaths}[cells]  row xpath cond=${row xpath cond}
-    ...                                                   col xpath cond=${col xpath cond}
+    ${cells xpath}=  Parse XPath  &{table xpaths}[cells]  row xpath cond=${row condition}
+    ...                                                   col xpath cond=${col condition}
 
     Return From Keyword  ${cells xpath}
 
@@ -138,7 +138,7 @@ Get Column Number By Name
     @{col names}=  Get Column Names  ${table xpaths}
 
     :FOR  ${i}  ${col name}  IN ENUMERATE  @{col names}
-    \  Return from keyword if   '${col name}' == '${name}'  ${i+1}
+    \  Return From Keyword If   '${col name}' == '${name}'  ${i+1}
 
 Get Row Count
     [Documentation]  Calculates and returns the amount of rows in the table.
@@ -146,7 +146,7 @@ Get Row Count
     [Arguments]
     ...  ${table xpaths}
 
-    ${rows xpath}=  Parse XPath  &{table xpaths}[rows]  row xpath cond=${EMPTY}
+    ${rows xpath}=  Get Rows Locator  ${table xpaths}  row condition=${EMPTY}
     ${count}=  Get Element Count  ${rows xpath}
 
     Return From Keyword  ${count}
@@ -155,27 +155,40 @@ Get Rows Locator
     [Tags]  user-keyword
     [Arguments]
     ...  ${table xpaths}
-    ...  ${row xpath cond}=${EMPTY}
+    ...  ${row condition}=${EMPTY}
 
-    ${rows xpath}=  Parse XPath  &{table xpaths}[rows]  row xpath cond=${row xpath cond}
+    ${rows xpath}=  Parse XPath  &{table xpaths}[rows]  row xpath cond=${row condition}
     Return From Keyword  ${rows xpath}
 
-Get Rows Locator By Number
+Get Row Locator By Number
     [Tags]  user-keyword
     [Arguments]
     ...  ${table xpaths}
-    ...  ${rownr}
+    ...  ${row nr}
 
-    ${rows xpath}=  Get Rows Locator  &{table xpaths}[rows]  row xpath cond=[${rownr}]
+    ${row xpath}=  Get Rows Locator  ${table xpaths}  row condition=[${row nr}]
+    Return From Keyword  ${row xpath}
+
+Get Rows Locator Where Column Is
+    [Arguments]
+    ...  ${table xpaths}
+    ...  ${col name}=${EMPTY}
+    ...  ${col value}=${EMPTY}
+
+    ${col nr}=  Get Column Number By Name  ${table xpaths}  ${col name}
+
+    ${row parsed}=  Parse XPath  &{table xpaths}[cells rel]  col xpath cond=[position()=${col nr} and .='${col value}']
+    ${rows xpath}=  Parse XPath  &{table xpaths}[rows]  row xpath cond=[.${row parsed}]
+
     Return From Keyword  ${rows xpath}
 
 Prepare Table XPaths
     [Documentation]  @TODO.
     [Tags]  user-keyword
     [Arguments]
-    ...  ${table}
-    ...  ${rows}
-    ...  ${cells}
+    ...  ${table}=${EMPTY}
+    ...  ${rows}=${EMPTY}
+    ...  ${cells}=${EMPTY}
     ...  ${column name cells}=${NONE}
 
     # Append default placeholders for row and column XPath condition
@@ -187,8 +200,12 @@ Prepare Table XPaths
     ...  table=${table}
     ...  rows=${table}${rows}
     ...  cells=${table}${rows}${cells}
+    ...  rows rel=${rows}
+    ...  cells rel=${cells}
     Run Keyword If  ${column name cells != None}
-    ...  Collections.Set To Dictionary  ${t}  column name cells=${table}${column name cells}
+    ...  Run Keywords
+    ...    Collections.Set To Dictionary  ${t}  column name cells=${table}${column name cells}  AND
+    ...    Collections.Set To Dictionary  ${t}  column name cells rel=${column name cells}
 
     Return From Keyword  ${t}
 
@@ -196,7 +213,9 @@ Parse XPath
     [Tags]  user-keyword
     [Arguments]
     ...  ${xpath tmpl str}
-    ...  &{kwargs}
+    ...  ${row xpath cond}=${EMPTY}
+    ...  ${col xpath cond}=${EMPTY}
 
-    ${xpath expr}=  Format String  ${xpath tmpl str}  &{kwargs}
+    ${xpath expr}=  Format String  ${xpath tmpl str}  row xpath cond=${row xpath cond}
+    ...                                               col xpath cond=${col xpath cond}
     Return From Keyword  ${xpath expr}
