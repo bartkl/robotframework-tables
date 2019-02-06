@@ -44,6 +44,20 @@ Get Cell Value
 
     Return From Keyword  ${value}
 
+Get Cell Value By Coordinates
+    [Documentation]  Gets the value of the cell identified by the supplied
+    ...  coordinates:
+    ...
+    ...  `${rownr}` is the row number, starting from 1.
+    ...  `${colnr}` is the column number, starting from 1.
+    ...
+    [Arguments]
+    ...  ${table xpaths}
+    ...  ${rownr}
+    ...  ${colnr}
+    ${value}=  Get Cell Value  [${rownr}]  [${colnr}]
+    Return From Keyword  ${value}
+
 Get Column Count
     [Documentation]  Calculates and returns the amount of columns in the table.
     [Arguments]
