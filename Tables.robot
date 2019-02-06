@@ -41,7 +41,7 @@ Get Column Count
 
     # Otherwise.
     ${cells xpath}=  Format String  &{table xpaths}[cells]  row xpath cond=[1]
-    ...                                                               col xpath cond=${EMPTY}
+    ...                                                     col xpath cond=${EMPTY}
     ${count}=  Get Element Count  ${cells xpath}
 
     Return From Keyword  ${count}
@@ -76,7 +76,7 @@ Get Cell Value
     ...  ${col xpath cond}=${EMPTY}
 
     ${cells xpath}=  Format String  &{table xpaths}[cells]  row xpath cond=${row xpath cond}
-    ...                                                               col xpath cond=${col xpath cond}
+    ...                                                     col xpath cond=${col xpath cond}
     ${value}=  SeleniumLibrary.Get Text  ${cells xpath}
 
     Return From Keyword  ${value}
