@@ -38,11 +38,19 @@ Get Cell Value
     ...  ${row xpath cond}=${EMPTY}
     ...  ${col xpath cond}=${EMPTY}
 
-    ${cells xpath}=  Format String  &{table xpaths}[cells]  row xpath cond=${row xpath cond}
-    ...                                                     col xpath cond=${col xpath cond}
+    ${cells xpath}=  Parse XPath  &{table xpaths}[cells]  row xpath cond=${row xpath cond}
+    ...                                                   col xpath cond=${col xpath cond}
     ${value}=  SeleniumLibrary.Get Text  ${cells xpath}
 
     Return From Keyword  ${value}
+
+Parse XPath
+    [Arguments]
+    ...  ${xpath tmpl str}
+    ...  &{kwargs}
+
+    ${xpath expr}=  Format String  ${xpath tmpl str}  &{kwargs}
+    Return from keyword  ${xpath expr}
 
 Get Cell Value By Coordinates
     [Documentation]  Gets the value of the cell identified by the supplied
@@ -70,8 +78,8 @@ Get Column Count
     Return From Keyword If  ${count} is not None  ${count}
 
     # Otherwise.
-    ${cells xpath}=  Format String  &{table xpaths}[cells]  row xpath cond=[1]
-    ...                                                     col xpath cond=${EMPTY}
+    ${cells xpath}=  Parse XPath  &{table xpaths}[cells]  row xpath cond=[1]
+    ...                                                   col xpath cond=${EMPTY}
     ${count}=  Get Element Count  ${cells xpath}
 
     Return From Keyword  ${count}
@@ -115,7 +123,7 @@ Get Row Count
     [Arguments]
     ...  ${table xpaths}
 
-    ${rows xpath}=  Format String  &{table xpaths}[rows]  row xpath cond=${EMPTY}
+    ${rows xpath}=  Parse XPath  &{table xpaths}[rows]  row xpath cond=${EMPTY}
     ${count}=  Get Element Count  ${rows xpath}
 
     Return From Keyword  ${count}
