@@ -44,14 +44,6 @@ Get Cell Value
 
     Return From Keyword  ${value}
 
-Parse XPath
-    [Arguments]
-    ...  ${xpath tmpl str}
-    ...  &{kwargs}
-
-    ${xpath expr}=  Format String  ${xpath tmpl str}  &{kwargs}
-    Return from keyword  ${xpath expr}
-
 Get Cell Value By Coordinates
     [Documentation]  Gets the value of the cell identified by the supplied
     ...  coordinates:
@@ -150,3 +142,10 @@ Prepare Table XPaths
 
     Return From Keyword  ${t}
 
+Parse XPath
+    [Arguments]
+    ...  ${xpath tmpl str}
+    ...  &{kwargs}
+
+    ${xpath expr}=  Format String  ${xpath tmpl str}  &{kwargs}
+    Return From Keyword  ${xpath expr}
