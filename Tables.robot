@@ -33,6 +33,7 @@ Get Cell Value
     ...  Examples can be found in the tests file.
     ...
     ...  @TODO: Improve this documentation.
+    [Tags]  user-keyword
     [Arguments]
     ...  ${table xpaths}
     ...  ${row xpath cond}=${EMPTY}
@@ -51,6 +52,7 @@ Get Cell Value By Coordinates
     ...  `${rownr}` is the row number, starting from 1.
     ...  `${colnr}` is the column number, starting from 1.
     ...
+    [Tags]  user-keyword
     [Arguments]
     ...  ${table xpaths}
     ...  ${rownr}
@@ -60,6 +62,7 @@ Get Cell Value By Coordinates
 
 Get Column Count
     [Documentation]  Calculates and returns the amount of columns in the table.
+    [Tags]  user-keyword
     [Arguments]
     ...  ${table xpaths}
 
@@ -82,6 +85,7 @@ Get Column Names
     ...
     ...  *NOTE*: This requires a `column name cells` locator in the table
     ...  dictionary.
+    [Tags]  user-keyword
     [Arguments]
     ...  ${table xpaths}
 
@@ -101,6 +105,7 @@ Get Column Number By Name
     ...  dictionary.
     ...
     ...  Also, numbering starts from 1.
+    [Tags]  user-keyword
     [Arguments]
     ...  ${table xpaths}
     ...  ${name}
@@ -112,6 +117,7 @@ Get Column Number By Name
 
 Get Row Count
     [Documentation]  Calculates and returns the amount of rows in the table.
+    [Tags]  user-keyword
     [Arguments]
     ...  ${table xpaths}
 
@@ -122,6 +128,7 @@ Get Row Count
 
 Prepare Table XPaths
     [Documentation]  @TODO.
+    [Tags]  user-keyword
     [Arguments]
     ...  ${table}
     ...  ${rows}
@@ -143,6 +150,7 @@ Prepare Table XPaths
     Return From Keyword  ${t}
 
 Parse XPath
+    [Tags]  user-keyword
     [Arguments]
     ...  ${xpath tmpl str}
     ...  &{kwargs}
