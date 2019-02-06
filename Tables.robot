@@ -19,6 +19,18 @@ Append To String If Not Contained
     ...  ELSE
     ...    Return from keyword  ${string}
 
+Get Cell Locator By Coordinates
+    [Tags]  user-keyword
+    [Arguments]
+    ...  ${table xpaths}
+    ...  ${rownr}
+    ...  ${colnr}
+
+    ${cell xpath}=  Get Cells Locator  &{table xpaths}  row xpath cond=[${rownr}]
+    ...                                                 col xpath cond=[${colnr}]
+
+    Return From Keyword  ${cell xpath}
+
 Get Cell Value
     [Documentation]  Gets the value from the cell identified by the supplied
     ...  conditions:
@@ -39,10 +51,9 @@ Get Cell Value
     ...  ${row xpath cond}=${EMPTY}
     ...  ${col xpath cond}=${EMPTY}
 
-    ${cells xpath}=  Parse XPath  &{table xpaths}[cells]  row xpath cond=${row xpath cond}
-    ...                                                   col xpath cond=${col xpath cond}
-    ${value}=  SeleniumLibrary.Get Text  ${cells xpath}
-
+    ${cell xpath}=  Get Cells Locator  ${table xpaths}  row xpath cond=${row xpath cond}
+    ...                                                 col xpath cond=${col xpath cond}
+    ${value}=  SeleniumLibrary.Get Text  ${cell xpath}
     Return From Keyword  ${value}
 
 Get Cell Value By Coordinates
@@ -57,8 +68,22 @@ Get Cell Value By Coordinates
     ...  ${table xpaths}
     ...  ${rownr}
     ...  ${colnr}
-    ${value}=  Get Cell Value  [${rownr}]  [${colnr}]
+
+    ${cell xpath}=  Get Cell Locator By Coordinates  ${table xpaths}  ${rownr}  ${colnr}
+    ${value}=  SeleniumLibrary.Get Text  ${cell xpath}
     Return From Keyword  ${value}
+
+Get Cells Locator
+    [Tags]  user-keyword
+    [Arguments]
+    ...  ${table xpaths}
+    ...  ${row xpath cond}=${EMPTY}
+    ...  ${col xpath cond}=${EMPTY}
+
+    ${cells xpath}=  Parse XPath  &{table xpaths}[cells]  row xpath cond=${row xpath cond}
+    ...                                                   col xpath cond=${col xpath cond}
+
+    Return From Keyword  ${cells xpath}
 
 Get Column Count
     [Documentation]  Calculates and returns the amount of columns in the table.
@@ -125,6 +150,24 @@ Get Row Count
     ${count}=  Get Element Count  ${rows xpath}
 
     Return From Keyword  ${count}
+
+Get Rows Locator
+    [Tags]  user-keyword
+    [Arguments]
+    ...  ${table xpaths}
+    ...  ${row xpath cond}=${EMPTY}
+
+    ${rows xpath}=  Parse XPath  &{table xpaths}[rows]  row xpath cond=${row xpath cond}
+    Return From Keyword  ${rows xpath}
+
+Get Rows Locator By Number
+    [Tags]  user-keyword
+    [Arguments]
+    ...  ${table xpaths}
+    ...  ${rownr}
+
+    ${rows xpath}=  Get Rows Locator  &{table xpaths}[rows]  row xpath cond=[${rownr}]
+    Return From Keyword  ${rows xpath}
 
 Prepare Table XPaths
     [Documentation]  @TODO.
