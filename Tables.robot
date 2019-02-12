@@ -15,9 +15,9 @@ Append To String If Not Contained
     ${is contained}=  Run Keyword And Return Status
     ...                   Should Contain  ${string}  ${part}
     Run Keyword If   not ${is contained}
-    ...    Return from keyword  ${string}${part}
+    ...    Return From Keyword  ${string}${part}
     ...  ELSE
-    ...    Return from keyword  ${string}
+    ...    Return From Keyword  ${string}
 
 Get Cell Locator By Coordinates
     [Arguments]
