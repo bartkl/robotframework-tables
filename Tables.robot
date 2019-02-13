@@ -114,7 +114,7 @@ Get Column Names
     :FOR  ${i}  IN RANGE  1  ${col count+1}
     \  ${value}=  SeleniumLibrary.Get Text  &{table xpaths}[column name cells][${i}]
     \  Append To List  ${col names}  ${value}
-    Return from keyword  ${col names}
+    Return From Keyword  ${col names}
 
 Get Column Number By Name
     [Documentation]  Determines the column number of the column identified by
